@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import org.hibernate.Session;
+//import org.hibernate.Session;
 
 import br.com.treinaweb.jpa.models.Pessoa;
 import br.com.treinaweb.jpa.services.interfaces.CrudService;
@@ -16,13 +16,13 @@ public class PessoaService implements CrudService<Pessoa, Integer> {
 	@Override
 	public List<Pessoa> all() {
 		List<Pessoa> pessoas = new ArrayList<Pessoa>();
-		EntityManager em =null;
+		EntityManager em = null;
 		try {
 			em = JpaUtils.getEntityManager();
 			pessoas = em.createQuery("from Pessoa", Pessoa.class).getResultList();
 			return pessoas;
 		} finally {
-			if(em != null) {
+			if (em != null) {
 				em.clear();
 			}
 		}
@@ -35,7 +35,7 @@ public class PessoaService implements CrudService<Pessoa, Integer> {
 			em = JpaUtils.getEntityManager();
 			return em.find(Pessoa.class, id);
 		} finally {
-			if(em != null) {
+			if (em != null) {
 				em.close();
 			}
 		}
@@ -45,13 +45,13 @@ public class PessoaService implements CrudService<Pessoa, Integer> {
 	public Pessoa insert(Pessoa entity) {
 		EntityManager em = null;
 		try {
-			em =JpaUtils.getEntityManager();
+			em = JpaUtils.getEntityManager();
 			em.getTransaction().begin();
 			em.persist(entity);
 			em.getTransaction().commit();
 			return entity;
-		}finally {
-			if(em != null) {
+		} finally {
+			if (em != null) {
 				em.close();
 			}
 		}
@@ -63,12 +63,12 @@ public class PessoaService implements CrudService<Pessoa, Integer> {
 		try {
 			em = JpaUtils.getEntityManager();
 			em.getTransaction().begin();
-//			em.merge(entity);
-			em.unwrap(Session.class).update(entity);
+			em.merge(entity);
+//			em.unwrap(Session.class).update(entity);
 			em.getTransaction().commit();
 			return entity;
-		}finally {
-			if(em != null) {
+		} finally {
+			if (em != null) {
 				em.close();
 			}
 		}
@@ -76,14 +76,35 @@ public class PessoaService implements CrudService<Pessoa, Integer> {
 
 	@Override
 	public void delete(Pessoa entity) {
-		// TODO Auto-generated method stub
-		
+		EntityManager em = null;
+		try {
+			em = JpaUtils.getEntityManager();
+			em.getTransaction().begin();
+			em.remove(entity);
+			em.getTransaction().commit();
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
 	}
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
-		
+		EntityManager em = null;
+		try {
+			em = JpaUtils.getEntityManager();
+			Pessoa pessoaASerDeletada = em.find(Pessoa.class, id);
+			if (pessoaASerDeletada != null) {
+				em.getTransaction().begin();
+				em.remove(pessoaASerDeletada);
+				em.getTransaction().commit();
+			}
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
 	}
-	
+
 }

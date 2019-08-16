@@ -34,6 +34,10 @@ public class Main {
 				break;
 			case 3:
 				atualizarPessoa();
+				break;
+			case 4:
+				deletarPessoa();
+				break;
 			default:
 				System.out.println("** Opção inválida! **");
 				break;
@@ -43,6 +47,16 @@ public class Main {
 		System.out.println("Tchau! :)");
 	}
 
+	private static void deletarPessoa() {
+		System.out.println("\n ** Remoção de pessoa **");
+		System.out.print(" - Digite o ID da pessoa a ser removida: ");
+		int idPessoaASerRemovida = SCANNER.nextInt();
+		SCANNER.hasNextLine();
+		CrudService<Pessoa, Integer> pessoaService = new PessoaService();
+		pessoaService.deleteById(idPessoaASerRemovida);
+		System.out.println("Pessoa removida com sucesso!");
+	}
+
 	private static void atualizarPessoa() {
 		System.out.println("\n ** Atualização de pessoa **");
 		System.out.println("Digite o ID da pessoa a ser atualizada: ");
@@ -50,7 +64,7 @@ public class Main {
 		SCANNER.nextLine();
 		CrudService<Pessoa, Integer> pessoaService = new PessoaService();
 		Pessoa pessoaAtual = pessoaService.byId(idPessoa);
-		if(pessoaAtual != null) {
+		if (pessoaAtual != null) {
 			System.out.println("Pessoa encontrada: ");
 			System.out.println(String.format(" - Nome: %s", pessoaAtual.getNome()));
 			System.out.println(String.format(" - Sobrenome: %s", pessoaAtual.getSobrenome()));
@@ -63,7 +77,7 @@ public class Main {
 			pessoaAtual.setIdade(SCANNER.nextInt());
 			pessoaService.update(pessoaAtual);
 			System.out.println("Pessoa atualizada com sucesso!");
-		}else {
+		} else {
 			System.out.println("Não existem pessoas com esse ID.");
 		}
 	}

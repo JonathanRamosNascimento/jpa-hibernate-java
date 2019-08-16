@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.hibernate.Session;
+
 import br.com.treinaweb.jpa.models.Pessoa;
 import br.com.treinaweb.jpa.services.interfaces.CrudService;
 import br.com.treinaweb.jpa.utils.JpaUtils;
@@ -61,7 +63,8 @@ public class PessoaService implements CrudService<Pessoa, Integer> {
 		try {
 			em = JpaUtils.getEntityManager();
 			em.getTransaction().begin();
-			em.merge(entity);
+//			em.merge(entity);
+			em.unwrap(Session.class).update(entity);
 			em.getTransaction().commit();
 			return entity;
 		}finally {

@@ -42,6 +42,8 @@ public class Main {
 			case 5:
 				pesquisarPessoaPorNome();
 				break;
+			case 6:
+				break;
 			default:
 				System.out.println("** Opção inválida! **");
 				break;

@@ -8,10 +8,10 @@ import javax.persistence.EntityManager;
 //import org.hibernate.Session;
 
 import br.com.treinaweb.jpa.models.Pessoa;
-import br.com.treinaweb.jpa.services.interfaces.CrudService;
+import br.com.treinaweb.jpa.services.interfaces.PessoaBuscaPorNome;
 import br.com.treinaweb.jpa.utils.JpaUtils;
 
-public class PessoaService implements CrudService<Pessoa, Integer> {
+public class PessoaService implements PessoaBuscaPorNome {
 
 	@Override
 	public List<Pessoa> all() {
@@ -100,6 +100,22 @@ public class PessoaService implements CrudService<Pessoa, Integer> {
 				em.remove(pessoaASerDeletada);
 				em.getTransaction().commit();
 			}
+		} finally {
+			if (em != null) {
+				em.close();
+			}
+		}
+	}
+
+	@Override
+	public List<Pessoa> searchByName(String name) {
+		EntityManager em = null;
+		try {
+			em = JpaUtils.getEntityManager();
+			List<Pessoa> pessoas = em
+					.createQuery("from Pessoa p where lower(p.nome) like lower(concat('%', :nome, '%'))", Pessoa.class)
+					.setParameter("nome", name).getResultList();
+			return pessoas;
 		} finally {
 			if (em != null) {
 				em.close();
